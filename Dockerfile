@@ -1,6 +1,7 @@
 FROM ubuntu:18.04
 
-ARG S6_OVERLAY_VERSION=v1.17.2.0
+ARG S6_OVERLAY_VERSION=1.21.7.0
+ARG S6_OVERLAY_MD5HASH=e034e40f303559e85c01416d1ec42f96
 ARG DEBIAN_FRONTEND="noninteractive"
 ENV TERM="xterm" LANG="C.UTF-8" LC_ALL="C.UTF-8"
 
@@ -18,8 +19,10 @@ RUN \
     && \
 
 # Fetch and extract S6 overlay
-    curl -J -L -o /tmp/s6-overlay-amd64.tar.gz https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-amd64.tar.gz && \
+    curl -J -L -o /tmp/s6-overlay-amd64.tar.gz https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64.tar.gz && \
+    echo "$S6_OVERLAY_MD5HASH /tmp/s6-overlay-amd64.tar.gz" | md5sum -c - && \
     tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
+    rm /tmp/s6-overlay-amd64.tar.gz && \
 
 # Add user
     useradd -U -d /config -s /bin/false plex && \
